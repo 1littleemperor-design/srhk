@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>妈，生日快乐！</title>
+<meta name="description" content="给我妈做的一页手账。有蛋糕，有照片，有六句祝福。">
+<meta name="theme-color" content="#efe7da">
+<meta name="robots" content="noindex, nofollow">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="生日快乐">
+<link rel="apple-touch-icon" href="assets/img/icon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:title" content="妈，生日快乐！">
+<meta property="og:description" content="今天只用做一件事：坐着。">
+<meta property="og:image" content="assets/img/cards/a1.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23a9513c'/%3E%3Ctext x='16' y='23' font-size='18' text-anchor='middle' fill='%23fbf8f2' font-family='sans-serif'%3E%E5%AF%BF%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     要改的文字都带 ✏️，直接改中文，不用动结构。
+     ============================================================ -->
+
+<div class="paper" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<!-- ============ 开场：一张贴了胶带的封面 ============ -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <span class="tape tape-a"></span>
+    <span class="tape tape-b"></span>
+    <span class="tape tape-c"></span>
+
+    <p class="gate-top">内部资料 · 请勿外传</p>
+    <h1 class="gate-title">妈<br><em>生日快乐</em></h1>
+
+    <p class="gate-meta">收件人：我妈　·　寄件人：我</p>
+
+    <button class="btn-big" id="openBtn" type="button">撕开看看</button>
+    <p class="gate-note">点一下就行，别客气</p>
+    <span class="gate-stamp" aria-hidden="true">仅此一份</span>
+  </div>
+</div>
+
+<button class="music" id="musicBtn" type="button" aria-pressed="false" title="生日歌">
+  <span class="music-ico" aria-hidden="true">♪</span>
+  <span>生日歌</span>
+</button>
+
+<main id="main">
+
+  <!-- ============ 蛋糕 ============ -->
+  <section class="hero" id="hero">
+    <p class="kicker">2026 · 一年一度 · 仅此一天</p>
+
+    <!-- ✏️ 大标题 -->
+    <h2 class="hero-title">妈，<em>生日快乐</em><span class="bang">！</span></h2>
+
+    <div class="cake-box">
+      <div class="cake" id="cake">
+        <div class="candles" id="candles" aria-label="生日蜡烛">
+          <!-- 蜡烛数量：复制或删除 <button class="candle"> -->
+          <button class="candle" type="button" aria-label="吹灭这根蜡烛"><span class="flame"></span></button>
+          <button class="candle" type="button" aria-label="吹灭这根蜡烛"><span class="flame"></span></button>
+          <button class="candle" type="button" aria-label="吹灭这根蜡烛"><span class="flame"></span></button>
+          <button class="candle" type="button" aria-label="吹灭这根蜡烛"><span class="flame"></span></button>
+          <button class="candle" type="button" aria-label="吹灭这根蜡烛"><span class="flame"></span></button>
+        </div>
+        <div class="tier tier-2"><span class="drip"></span></div>
+        <div class="tier tier-1"><span class="drip"></span></div>
+        <div class="plate"></div>
+      </div>
+
+      <p class="cake-hint" id="cakeHint" aria-live="polite">点一下蜡烛，或者对着屏幕吹</p>
+      <button class="mic-btn" id="micBtn" type="button"><i class="dot"></i>用嘴吹</button>
+      <p class="mic-note" id="micNote"></p>
+    </div>
+  </section>
+
+  <!-- ============ 愿望（吹灭后出现） ============ -->
+  <section class="wish" id="wish">
+    <div class="note-big">
+      <span class="tape tape-top"></span>
+      <p class="note-kicker">蜡烛灭了</p>
+      <p class="note-line">愿望我替你记着，不往外说。</p>
+      <p class="note-main">祝你：<b>少操心</b>、<b>多睡会儿</b>、<b>钱随便花</b></p>
+      <p class="note-small">（前两条靠你自己，第三条我努力）</p>
+      <button class="link-btn" id="relight" type="button">再点一遍蜡烛</button>
+    </div>
+  </section>
+
+  <!-- ============ 照片 ============ -->
+  <section class="gallery" id="gallery">
+    <div class="sec-head">
+      <h3>相册</h3>
+    </div>
+
+    <!-- ✏️ 照片在 photos/ 里，换图改 src；下面一行是照片说明 -->
+    <div class="polaroids">
+            <div class="pol-wrap">
+  <figure class="polaroid">
+          <span class="tape tape-mini"></span>
+          <div class="photo"><img src="photos/m5.jpg" alt="很多年前的她" loading="lazy"></div>
+        </figure>
+      </div>
+            <div class="pol-wrap">
+  <figure class="polaroid">
+          <span class="tape tape-mini"></span>
+          <div class="photo"><img src="photos/m6.jpg" alt="看鱼龙化石" loading="lazy"></div>
+        </figure>
+      </div>
+            <div class="pol-wrap">
+  <figure class="polaroid tall">
+          <span class="tape tape-mini"></span>
+          <div class="photo"><img src="photos/m1.jpg" alt="门前的她" loading="lazy"></div>
+        </figure>
+      </div>
+            <div class="pol-wrap">
+  <figure class="polaroid">
+          <span class="tape tape-mini"></span>
+          <div class="photo"><img src="photos/m2.jpg" alt="背着孩子" loading="lazy"></div>
+        </figure>
+      </div>
+            <div class="pol-wrap">
+  <figure class="polaroid">
+          <span class="tape tape-mini"></span>
+          <div class="photo"><img src="photos/m3.jpg" alt="转盘前" loading="lazy"></div>
+        </figure>
+      </div>
+            <div class="pol-wrap">
+  <figure class="polaroid">
+          <span class="tape tape-mini"></span>
+          <div class="photo"><img src="photos/m4.jpg" alt="museum 相框" loading="lazy"></div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 六个祝福 ============ -->
+  <section class="bless" id="bless">
+    <div class="sec-head">
+      <h3>给你的六个祝福</h3>
+    </div>
+
+    <div class="bless-grid">
+      <div class="bless-card">
+        <span class="num">01</span>
+        <p>身体好，体检报告上每一项都正常。</p>
+      </div>
+      <div class="bless-card">
+        <span class="num">02</span>
+        <p>想出去玩就出去玩。</p>
+      </div>
+      <div class="bless-card">
+        <span class="num">03</span>
+        <p>多吃点好吃的。</p>
+      </div>
+      <div class="bless-card">
+        <span class="num">04</span>
+        <p>睡到自然醒，家里的事先放一放。</p>
+      </div>
+      <div class="bless-card">
+        <span class="num">05</span>
+        <p>少替我们操心，我们自己能行。</p>
+      </div>
+      <div class="bless-card">
+        <span class="num">06</span>
+        <p>往后的日子慢慢过，别再赶。</p>
+      </div>
+    </div>
+
+    <!-- 六张贺卡：点开才看得到 -->
+    <div class="deck-wrap">
+      <p class="deck-title">抽一张生日贺卡</p>
+      <div class="deck" id="deck">
+        <button class="card" type="button" aria-label="翻开贺卡">
+          <span class="card-inner">
+            <span class="card-face card-back"><span class="card-seal">祝福</span></span>
+            <span class="card-face card-front">
+              <img class="card-img" src="assets/img/cards/a1.jpg" alt="" width="900" height="1195">
+            </span>
+          </span>
+        </button>
+        <button class="card" type="button" aria-label="翻开贺卡">
+          <span class="card-inner">
+            <span class="card-face card-back"><span class="card-seal">祝福</span></span>
+            <span class="card-face card-front">
+              <img class="card-img" src="assets/img/cards/a2.jpg" alt="" width="900" height="1195" loading="lazy">
+            </span>
+          </span>
+        </button>
+        <button class="card" type="button" aria-label="翻开贺卡">
+          <span class="card-inner">
+            <span class="card-face card-back"><span class="card-seal">祝福</span></span>
+            <span class="card-face card-front">
+              <img class="card-img" src="assets/img/cards/a3.jpg" alt="" width="900" height="1195" loading="lazy">
+            </span>
+          </span>
+        </button>
+        <button class="card" type="button" aria-label="翻开贺卡">
+          <span class="card-inner">
+            <span class="card-face card-back"><span class="card-seal">祝福</span></span>
+            <span class="card-face card-front">
+              <img class="card-img" src="assets/img/cards/a4.jpg" alt="" width="900" height="1195" loading="lazy">
+            </span>
+          </span>
+        </button>
+        <button class="card" type="button" aria-label="翻开贺卡">
+          <span class="card-inner">
+            <span class="card-face card-back"><span class="card-seal">祝福</span></span>
+            <span class="card-face card-front">
+              <img class="card-img" src="assets/img/cards/a5.jpg" alt="" width="900" height="1195" loading="lazy">
+            </span>
+          </span>
+        </button>
+        <button class="card" type="button" aria-label="翻开贺卡">
+          <span class="card-inner">
+            <span class="card-face card-back"><span class="card-seal">祝福</span></span>
+            <span class="card-face card-front">
+              <img class="card-img" src="assets/img/cards/a6.jpg" alt="" width="900" height="1195" loading="lazy">
+            </span>
+          </span>
+        </button>
+      </div>
+      <button class="btn-small deck-reset" id="deckReset" type="button">洗牌重抽</button>
+    </div>
+  </section>
+
+  <!-- ============ 结尾 ============ -->
+  <section class="ending" id="ending">
+    <div class="sticker-big">
+      <span class="sticker-shadow" aria-hidden="true"></span>
+      <p class="sticker-text">生日快乐</p>
+    </div>
+
+    <p class="end-line">生日快乐，身体好，剩下的日子我陪你慢慢过。</p>
+
+    <p class="end-sign">—— 你的孩子</p>
+    <!-- ✏️ 日期：改成妈妈生日那天，格式 年-月-日 -->
+    <p class="end-date" id="today" data-date="2026-11-22"></p>
+
+    <button class="btn-small" id="heartBtn" type="button">再撒一次</button>
+    <span class="stamp" aria-hidden="true">仅此一份</span>
+  </section>
+
+</main>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="照片放大">
+  <button class="lb-close" id="lbClose" type="button" aria-label="关闭">✕</button>
+  <img id="lbImg" alt="">
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

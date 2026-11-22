@@ -412,28 +412,81 @@
   if (deck) {
     var cards = $$('.card', deck);
     var reset = $('#deckReset');
-    var flipped = 0;
+    var dealt = 0;
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      return a;
+    }
+
+    /* 打乱顺序、重新叠好 */
+    function arrange() {
+      shuffle(cards).forEach(function (c) {
+        c.classList.remove('dealt', 'flipped', 'top');
+        c.classList.add('stacked');
+        c.style.removeProperty('--slot');
+        deck.appendChild(c);
+      });
+
+      Array.prototype.forEach.call(deck.children, function (c, i) {
+        c.style.setProperty('--i', i);
+      });
+
+      deck.children[deck.children.length - 1].classList.add('top');
+      dealt = 0;
+      deck.style.setProperty('--shift', cards.length / 2);
+      deck.classList.remove('done');
+      if (reset) reset.classList.remove('show');
+    }
+
+    function topmost() {
+      var top = null, max = -1;
+      cards.forEach(function (c) {
+        if (!c.classList.contains('stacked')) return;
+        var i = parseInt(c.style.getPropertyValue('--i'), 10) || 0;
+        if (i > max) { max = i; top = c; }
+      });
+      return top;
+    }
+
+    function deal(card) {
+      card.classList.remove('stacked', 'top');
+      card.classList.add('dealt');
+      card.style.setProperty('--slot', dealt);
+      dealt++;
+      /* 已翻出的那几张整体居中，翻满六张时正好铺满一行 */
+      deck.style.setProperty('--shift', (cards.length - dealt) / 2);
+      card.classList.add('flipped');
+
+      var next = topmost();
+      if (next) next.classList.add('top');
+
+      if (dealt === cards.length) {
+        deck.classList.add('done');
+        burstConfetti();
+        if (reset) setTimeout(function () { reset.classList.add('show'); }, 620);
+      }
+    }
 
     cards.forEach(function (card) {
       card.addEventListener('click', function () {
-        if (card.classList.contains('flipped')) return;
-        card.classList.add('flipped');
-        flipped++;
-        if (flipped === cards.length) {
-          burstConfetti();
-          if (reset) setTimeout(function () { reset.classList.add('show'); }, 420);
-        }
+        if (!card.classList.contains('top')) return;
+        deal(card);
       });
     });
 
     if (reset) {
       reset.addEventListener('click', function () {
-        cards.forEach(function (c) { c.classList.remove('flipped'); });
-        flipped = 0;
-        reset.classList.remove('show');
+        arrange();
         deck.scrollIntoView({ behavior: 'smooth', block: 'center' });
       });
     }
+
+    arrange();
   }
 
   /* =====================================================

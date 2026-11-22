@@ -532,27 +532,34 @@ body.wished .wish{ display:block; animation:pop .5s cubic-bezier(.2,.9,.3,1.2) b
   font-size:1rem; line-height:1.85;
 }
 
-/* ---------- 六张贺卡 ---------- */
+/* ---------- 六张贺卡（叠成一摞，翻一张出来一张） ---------- */
 .deck-wrap{ margin-top:clamp(46px,7vh,70px); text-align:center; }
 .deck-title{
   font-size:clamp(1.12rem,3.2vw,1.42rem);
   font-weight:900;
 }
 .deck{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:clamp(14px,2.2vw,26px);
-  max-width:1000px;
-  margin:clamp(20px,3vh,28px) auto 0;
-}
-.card{
+  --cw:132px;
+  --gap:12px;
+  --ch:calc(var(--cw) * 4 / 3);
   position:relative;
+  width:calc(var(--cw) * 6 + var(--gap) * 5);
+  height:calc(var(--ch) * 2 + 34px);
+  margin:clamp(24px,3.4vh,34px) auto 0;
+  transition:height .66s cubic-bezier(.2,.8,.25,1);
+}
+.deck.done{ height:var(--ch); }
+
+.card{
+  position:absolute; left:50%; top:0;
+  width:var(--cw);
   aspect-ratio:3/4;
   padding:0; border:0; background:none;
   cursor:pointer;
   perspective:900px;
   -webkit-tap-highlight-color:transparent;
-  transition:transform .2s;
+  transition:transform .66s cubic-bezier(.2,.8,.25,1), opacity .4s;
+  will-change:transform;
 }
 .card-inner{
   position:absolute; inset:0;
@@ -579,9 +586,9 @@ body.wished .wish{ display:block; animation:pop .5s cubic-bezier(.2,.9,.3,1.2) b
 }
 .card-seal{
   display:grid; place-items:center;
-  width:46px; height:46px; border-radius:50%;
+  width:42px; height:42px; border-radius:50%;
   background:var(--clay); color:#fdf6ec;
-  font-family:var(--kai); font-size:1.02rem; letter-spacing:-.02em; line-height:1;
+  font-family:var(--kai); font-size:.94rem; letter-spacing:-.02em; line-height:1;
   box-shadow:inset 0 0 0 2px rgba(253,246,236,.45);
   transform:rotate(-8deg);
 }
@@ -603,22 +610,29 @@ body.wished .wish{ display:block; animation:pop .5s cubic-bezier(.2,.9,.3,1.2) b
   background:#f3ebdc;
   box-shadow:inset 0 0 0 1px rgba(45,41,37,.1);
 }
-.coupon{
-  flex:0 0 auto;
-  margin-top:11px;
-  font-family:var(--sans); font-size:.58rem; letter-spacing:.2em;
-  color:var(--clay);
+
+/* 叠着的时候 */
+.card.stacked{
+  pointer-events:none;
+  transform:translate(calc(-50% + (var(--i) - 2.5) * 4px), calc(var(--i) * -6px)) rotate(calc((var(--i) - 2.5) * 1.5deg));
+  z-index:calc(10 + var(--i));
 }
-.card-text{
-  flex:0 0 auto;
-  margin-top:4px;
-  font-family:var(--hand);
-  font-size:clamp(.8rem,1.15vw,.98rem);
-  line-height:1.55;
-  color:var(--ink);
-  text-wrap:pretty;
+.card.stacked.top{ pointer-events:auto; }
+.card.stacked.top:hover{
+  transform:translate(calc(-50% + (var(--i) - 2.5) * 4px), calc(var(--i) * -6px - 9px)) rotate(calc((var(--i) - 2.5) * 1.5deg));
 }
-.card:not(.flipped):hover{ transform:translateY(-5px); }
+
+/* 翻出来以后，排到下面一行 */
+.card.dealt{
+  pointer-events:none;
+  cursor:default;
+  transform:translate(calc(-50% + (var(--slot) - 2.5 + var(--shift, 0)) * (var(--cw) + var(--gap))), calc(var(--ch) + 34px)) rotate(0deg);
+  z-index:20;
+}
+.deck.done .card.dealt{
+  transform:translate(calc(-50% + var(--slot) * (var(--cw) + var(--gap)) - var(--cw) * 2.5 - var(--gap) * 2.5), 0) rotate(0deg);
+}
+
 .card:focus-visible{ outline:3px solid var(--clay); outline-offset:4px; }
 .deck-reset{
   margin-top:clamp(22px,3.4vh,30px);
@@ -715,6 +729,7 @@ body.wished .wish{ display:block; animation:pop .5s cubic-bezier(.2,.9,.3,1.2) b
 
 /* ---------- 窄屏 ---------- */
 @media (max-width:820px){
+  .deck{ --cw:104px; --gap:10px; }
   .hero-title{ font-size:clamp(2.2rem,11vw,3.4rem); }
   .sec-head h3{ font-size:clamp(1.4rem,6vw,1.9rem); }
   .stamp{ display:none; }
@@ -730,11 +745,10 @@ body.wished .wish{ display:block; animation:pop .5s cubic-bezier(.2,.9,.3,1.2) b
   .polaroid figcaption{ font-size:.78rem; padding:8px 2px 10px; }
   .bless-card{ padding:22px 16px 18px; }
   .bless-card p{ font-size:.95rem; }
-  .deck{ grid-template-columns:repeat(2,1fr); gap:11px; }
-  .card{ aspect-ratio:3/4; }
-  .card-seal{ width:38px; height:38px; font-size:.78rem; }
-  .card-face{ padding:8px 7px; gap:6px; }
-  .card-front{ padding:6px; }
+  .deck{ --cw:58px; --gap:6px; }
+  .card-seal{ width:26px; height:26px; font-size:.58rem; box-shadow:inset 0 0 0 1px rgba(253,246,236,.5); }
+  .card-face{ padding:4px; gap:4px; border-width:1.5px; box-shadow:0 3px 0 rgba(45,41,37,.92); }
+  .card-front{ padding:3px; }
   .coupon{ font-size:.52rem; letter-spacing:.14em; }
   .music{ padding:8px 13px 8px 11px; font-size:.72rem; }
   .gate-card{ width:min(360px,86vw); padding:26px 20px 22px; }
